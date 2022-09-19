@@ -10,7 +10,8 @@ class FireStorePage extends StatefulWidget {
 
 class _FireStorePageState extends State<FireStorePage> {
 
-  //생성한 컬렉션 이름을 전달 collection('items');
+  //CollectionReference 클래스 - 생성한 컬렉션(테이블) 참조 ,
+  // 이름을 전달 collection('items');
   CollectionReference product = FirebaseFirestore.instance.collection('items');
 
   final TextEditingController nameController = TextEditingController();
