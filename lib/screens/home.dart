@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memo_app/screens/edit.dart';
 import 'package:memo_app/database/db.dart';
 import 'package:memo_app/database/memo.dart';
+import 'package:memo_app/screens/view.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -44,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
-  
+
 
   Future<List<Memo>> loadMemo() async {
     DBHelper sd = DBHelper();
@@ -111,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: (){
                 Navigator.push(
                     parentContext,
-                    CupertinoPageRoute(builder: (context) => EditPage()));
+                    CupertinoPageRoute(builder: (context) => ViewPage(id: memo.id)));
               },
               onLongPress: (){
                setState(() {
