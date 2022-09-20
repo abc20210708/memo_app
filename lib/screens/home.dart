@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:memo_app/screens/edit.dart';
+import 'package:memo_app/screens/write.dart';
 import 'package:memo_app/database/db.dart';
 import 'package:memo_app/database/memo.dart';
 import 'package:memo_app/screens/view.dart';
@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.push(
-              context, CupertinoPageRoute(builder: (context) => EditPage()));
+              context, CupertinoPageRoute(builder: (context) => WritePage()));
         },
         tooltip: '메모를 추가하려면 클릭하세요',
         label: Text("메모 추가"),
@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void showAlertDialog(BuildContext context) async {
-    String result = await showDialog(
+     await showDialog(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
@@ -90,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget memoBuilder(BuildContext parentContext) {
-    return FutureBuilder(
+    return FutureBuilder<List<Memo>>(
       builder: (context, snap) {
         if (snap.hasData == null) {
           return Container(
@@ -112,7 +112,8 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: (){
                 Navigator.push(
                     parentContext,
-                    CupertinoPageRoute(builder: (context) => ViewPage(id: memo.id)));
+                    CupertinoPageRoute(
+                        builder: (context) => ViewPage(id: memo.id)));
               },
               onLongPress: (){
                setState(() {
@@ -145,11 +146,15 @@ class _MyHomePageState extends State<MyHomePage> {
                         Text(memo.title ,
                         style: TextStyle(
                           fontSize: 20, fontWeight: FontWeight.bold
-                        ),),
+                        ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                         Text(memo.text,
                         style: TextStyle(
-                          fontSize: 15
-                        ),),
+                          fontSize: 15,
+                        ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ],
                     ),
                     Column(
