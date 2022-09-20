@@ -3,12 +3,17 @@ import 'package:memo_app/database/db.dart';
 import 'package:memo_app/database/memo.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert'; // for the utf8.encode method
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:memo_app/screens/home.dart';
 
 class WritePage extends StatelessWidget {
 
   String title = "";
   String text = "";
  // BuildContext Bcontext;
+
+  RefreshController _refreshController
+  = RefreshController(initialRefresh:true);
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +25,10 @@ class WritePage extends StatelessWidget {
               icon: const Icon(Icons.delete)
           ),
           IconButton(
-              onPressed: saveDB,
-              icon: const Icon(Icons.save)
+              onPressed:
+                saveDB,
+              icon: const Icon(Icons.save),
+
           ),
         ],
       ),
@@ -58,6 +65,8 @@ class WritePage extends StatelessWidget {
     );
   }
 
+
+
   Future<void> saveDB() async {
     DBHelper sd = DBHelper();
 
@@ -71,7 +80,6 @@ class WritePage extends StatelessWidget {
     await sd.insertMemo(fido);
 
     print(await sd.memos());
-   // Navigator.pop(Bcontext);
    // print(await sd.memos());
   }
 

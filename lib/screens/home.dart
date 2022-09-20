@@ -8,9 +8,11 @@ import 'package:memo_app/database/memo.dart';
 import 'package:memo_app/screens/view.dart';
 
 class MyHomePage extends StatefulWidget {
+
   const MyHomePage({super.key, required this.title});
 
   final String title;
+
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
