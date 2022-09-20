@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:memo_app/screens/write.dart';
@@ -91,8 +93,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget memoBuilder(BuildContext parentContext) {
     return FutureBuilder<List<Memo>>(
-      builder: (context, snap) {
-        if (snap.hasData == null) {
+      future: loadMemo(),
+      builder: (BuildContext context,AsyncSnapshot snap) {
+        if (!snap.hasData) {
           return Container(
             alignment: Alignment.center,
             child: Text('"메모 추가"버튼을 눌러\n 새로운 메모를 추가해보세요!',
@@ -174,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
           },
         );
       },
-      future: loadMemo(),
+     // future: loadMemo(),
     );
   }
 
