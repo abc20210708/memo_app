@@ -1,3 +1,5 @@
+
+
 class Memo {
   final String id;
   final String title;
@@ -5,11 +7,13 @@ class Memo {
   final String createTime;
   final String editTime;
 
-  Memo({required this.id,
+  Memo({
+    required this.id,
     required this.title,
     required this.text,
     required this.createTime,
-    required this.editTime});
+    required this.editTime
+  });
 
   Map<String, dynamic> toMap() {
     return {

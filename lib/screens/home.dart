@@ -14,19 +14,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String deleteId = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(left: 20, top: 20, bottom: 20),
-            child: Text(
-              "MEMO",
-              style: TextStyle(fontSize: 36, color: Colors.black87),
+            padding: EdgeInsets.only(left: 5, top: 40, bottom: 20),
+            child: Container(
+              child: Text(
+                "MEMO",
+                style: TextStyle(fontSize: 36, color: Colors.black87),
+              ),
+              alignment: Alignment.centerLeft,
             ),
           ),
-          Expanded(child: memoBuilder())
+          Expanded(child: memoBuilder(context))
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -40,39 +44,126 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
-
-  List<Widget> LoadMemo() {
-    List<Widget> memoList = [];
-    memoList.add(Container(
-      color: Colors.purpleAccent,
-      height: 100,
-    ));
-    return memoList;
-  }
+  
 
   Future<List<Memo>> loadMemo() async {
     DBHelper sd = DBHelper();
     return await sd.memos();
   }
 
-  Widget memoBuilder() {
+  Future<void> deleteMemo(String id) async {
+    DBHelper sd = DBHelper();
+    return sd.deleteMemo(id);
+  }
+
+  void showAlertDialog(BuildContext context) async {
+    String result = await showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('삭제 경고'),
+          content: Text('정말 삭제하시겠습니까?\n삭제된 메모는 복구되지 않습니다.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('삭제'),
+              onPressed: () {
+                Navigator.pop(context, "삭제");
+                setState(() {
+                  deleteMemo(deleteId);
+                });
+                deleteId = "";
+              },
+            ),
+            TextButton(
+              child: Text('취소'),
+              onPressed: () {
+                deleteId = "";
+                Navigator.pop(context, "취소");
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget memoBuilder(BuildContext parentContext) {
     return FutureBuilder(
-      builder: (context, projectSnap) {
-        if (projectSnap.connectionState == ConnectionState.none &&
-            projectSnap.hasData == null) {
-          return Container(child: Text("메모를 지금 바로 추가해 보세요!"),);
+      builder: (context, snap) {
+        if (snap.hasData == null) {
+          return Container(
+            alignment: Alignment.center,
+            child: Text('"메모 추가"버튼을 눌러\n 새로운 메모를 추가해보세요!',
+            style: TextStyle(
+              fontSize: 15, color: Colors.blueGrey,
+            ),
+              textAlign: TextAlign.center,
+            ),
+          );
         }
         return ListView.builder(
-          itemCount: projectSnap.data!.length,
+          physics: BouncingScrollPhysics(),
+          itemCount: snap.data!.length,
           itemBuilder: (context, index) {
-            Memo memo = projectSnap.data![index];
-            return Column(
-              children: <Widget>[
-                Text(memo.title),
-                Text(memo.text),
-                Text(memo.editTime),
-                // Widget to display the list of project
-              ],
+            Memo memo = snap.data![index];
+            return InkWell(
+              onTap: (){
+                Navigator.push(
+                    parentContext,
+                    CupertinoPageRoute(builder: (context) => EditPage()));
+              },
+              onLongPress: (){
+               setState(() {
+                 deleteId = memo.id;
+                 showAlertDialog(parentContext);
+                 print("memo.id : "+ memo.id);
+                 //deleteMemo(memo.id);
+               });
+              },
+              child: Container(
+                padding: EdgeInsets.all(15),
+                margin: EdgeInsets.all(5),
+                alignment: Alignment.center,
+                height: 140,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(memo.title ,
+                        style: TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold
+                        ),),
+                        Text(memo.text,
+                        style: TextStyle(
+                          fontSize: 15
+                        ),),
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text("최종수정시간 : " + memo.editTime.split('.')[0],
+                        style: TextStyle(fontSize: 11),
+                        textAlign: TextAlign.end,),
+                      ],
+                    ),
+                    // Widget to display the list of project
+                  ],
+                ),
+              ),
             );
           },
         );

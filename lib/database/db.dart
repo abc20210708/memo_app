@@ -2,7 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:memo_app/database/memo.dart';
 
-final String TableName = 'memos'; //테이브 이름
+final String TableName = 'memos'; //테이블 이름
 
 class DBHelper {
   var _db;
@@ -16,7 +16,9 @@ class DBHelper {
       // 데이터베이스가 처음 생성될 때, dog를 저장하기 위한 테이블을 생성합니다.
       onCreate: (db, version) {
         return db.execute(
-          "CREATE TABLE memos(id TEXT PRIMARY KEY, title TEXT, text TEXT, createTime TEXT, editTime TEXT)",
+          "CREATE TABLE memos(id TEXT PRIMARY KEY AUTOINCREMENT ,"
+              " title TEXT, text TEXT, createTime TEXT,"
+              " editTime TEXT)",
         );
       },
       // 버전을 설정하세요. onCreate 함수에서 수행되며 데이터베이스 업그레이드와 다운그레이드를
@@ -71,7 +73,7 @@ class DBHelper {
     );
   }
 
-  Future<void> deleteMemo(int id) async {
+  Future<void> deleteMemo(String id) async {
     final db = await database;
 
     // 데이터베이스에서 Memo를 삭제합니다.
