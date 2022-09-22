@@ -99,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (BuildContext context,AsyncSnapshot snap) {
         if (!snap.hasData) {
           return Container(
-            alignment: Alignment.center,
+            alignment: Alignment.bottomCenter,
             child: Text('"메모 추가"버튼을 눌러\n 새로운 메모를 추가해보세요!',
             style: TextStyle(
               fontSize: 15, color: Colors.blueGrey,

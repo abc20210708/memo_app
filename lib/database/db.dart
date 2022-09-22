@@ -7,6 +7,8 @@ final String TableName = 'memos'; //테이블 이름
 class DBHelper {
   var _db;
 
+  //참고 블로그 - https://dev-yakuza.posstree.com/ko/flutter/widget/sqflite/
+
   Future<Database> get database async {
     if ( _db != null ) return _db;
     _db = openDatabase(
